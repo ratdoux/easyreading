@@ -1,0 +1,19 @@
+{
+  "short_name": "EasyRead",
+  "name": "Easy Reading Extension",
+  "manifest_version": 3,
+  "description": "Extension to help you read quicker",
+  "version": "0.1",
+  "icons":{
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Reading Easy"
+  },
+  "content_scripts": [{
+    "js": ["content.js"],
+    "css": ["content.css"],
+    "matches": ["https://*/*"]
+  }],
+  "permissions": ["storage", "activeTab", "scripting"]
+}

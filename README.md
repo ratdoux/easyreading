@@ -3,7 +3,7 @@ bada bing bada boom Chrome extension
 
 
 
-How to install this shit :
+How to install this :
 (works if you're using any chromium based browser)
 
 1. Go to extensions

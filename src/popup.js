@@ -1,24 +1,33 @@
-let changeColor = document.getElementById("changeColor");
-let coloriser = document.getElementById("html5colorpicker");
-let textValueSlider = document.getElementById("textValueSlider");
+const coloriser = document.getElementById("html5colorpicker");
+const textValueSlider = document.getElementById("textValueSlider");
 //event on chrome load
 
+function loadChanges(func) {
+    return () => {
+        chrome.tabs.query(
+            { active: true, lastFocusedWindow: true },
+            ([currentTab]) => {
+                chrome.scripting.executeScript({
+                    target: { tabId: currentTab.id },
+                    function: func,
+                });
+            }
+        );
+    };
+}
+
+chrome.storage.sync.get(['textColor', 'proportion'], ({ textColor, proportion }) => {
+    coloriser.value = textColor;
+    textValueSlider.value = proportion;
+});
+
 coloriser.addEventListener("input", () => {
-    const color = coloriser.value;
-    chrome.storage.sync.set({ color });
+    const textColor = coloriser.value;
+    chrome.storage.sync.set({ textColor }, loadChanges(addBionicStyles));
 }, false);
 
 
 textValueSlider.addEventListener("input", () => {
-    const textValue = textValueSlider.value;
-    chrome.storage.sync.set({ textValue });
+    const proportion = textValueSlider.value;
+    chrome.storage.sync.set({ proportion }, loadChanges(addBionicMarkup));
 }, false);
-
-changeColor.addEventListener("click", async () => {
-    let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-
-    chrome.scripting.executeScript({
-        target: { tabId: tab.id },
-        function: setPageBgColor,
-    });
-});

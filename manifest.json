@@ -11,7 +11,7 @@
     "default_title": "Reading Easy"
   },
   "content_scripts": [{
-    "js": ["src/content.js"],
+    "js": ["src/setPageBgColor.js","src/content.js"],
     "css": [],
     "matches": ["https://*/*"]
   }],

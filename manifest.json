@@ -7,12 +7,12 @@
   "icons":{
   },
   "action": {
-    "default_popup": "popup.html",
+    "default_popup": "src/popup.html",
     "default_title": "Reading Easy"
   },
   "content_scripts": [{
-    "js": ["content.js"],
-    "css": ["content.css"],
+    "js": ["src/setPageBgColor.js","src/content.js"],
+    "css": [],
     "matches": ["https://*/*"]
   }],
   "permissions": ["storage", "activeTab", "scripting"]

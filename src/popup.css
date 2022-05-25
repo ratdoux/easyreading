@@ -1,0 +1,12 @@
+button, input {
+    cursor: pointer;
+}
+
+button {
+    margin: 3px 0 5px;
+}
+
+button.current {
+    box-shadow: 0 0 0 2px white,
+    0 0 0 4px black;
+}

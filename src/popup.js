@@ -5,7 +5,6 @@ let coloriser = document.getElementById("html5colorpicker");
 let textValueSlider = document.getElementById("textValueSlider");
 //event on chrome load
 
-
 coloriser.addEventListener("change", function() {
     color = coloriser.value;
     chrome.storage.sync.set({ color });

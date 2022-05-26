@@ -1,6 +1,3 @@
-
-
-
 function run() {
     let computedValue;
     chrome.storage.sync.get('blacklist', storedConf => {
@@ -11,5 +8,4 @@ function run() {
         }
     });
 }
-
 run();

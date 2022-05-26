@@ -6,10 +6,30 @@ const defaultConf = {
 
 
 function withProp(key, func) {
-chrome.storage.sync.get(key, storedConf => {
-        const computedValue = storedConf[key] || defaultConf[key];
-        func(computedValue);
+    chrome.storage.local.get('settings', ({ settings }) => {
+        const settingsNullCheck = settings || [];
+        const currentTabUrl = window.location.toString().split('/')[2];
+        const currentSettings = settingsNullCheck.find(setting => currentTabUrl.includes(setting.url));
+        if(currentSettings)
+        {
+            const computedValue = currentSettings[key] || defaultConf[key];
+            func(computedValue);
+        }
+        else
+        {
+            chrome.storage.sync.get(key, storedConf => {
+                const computedValue = storedConf[key] || defaultConf[key];
+                func(computedValue);
+            });
+        }
     });
+
+
+
+
+
+
+
 }
 
 const BIONIC_WORD = "bionic-word";

@@ -2,6 +2,7 @@
 const coloriser = document.getElementById("html5colorpicker");
 const textValueSlider = document.getElementById("textValueSlider");
 const blackListButton = document.getElementById("blackListButton");
+const storeSettingButton = document.getElementById("storeSettingButton");
 //event on chrome load
 
 function loadChanges(func) {
@@ -18,10 +19,7 @@ function loadChanges(func) {
     };
 }
 
-chrome.storage.sync.get(['textColor', 'proportion'], ({ textColor, proportion }) => {
-    coloriser.value = textColor;
-    textValueSlider.value = proportion;
-});
+
 
 coloriser.addEventListener("input", () => {
 
@@ -43,13 +41,44 @@ function blacklistCurrentToggle()
     chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
         chrome.storage.sync.get('blacklist', ({blacklist}) => {
             const computedValue = blacklist || [];
-            const siteUrl = tabs[0].url.split('/')[2];
-            if(computedValue.includes(siteUrl))
-                chrome.storage.sync.set({ blacklist: computedValue.filter(url => url !== siteUrl) }, loadChanges(addBionicMarkup));
+            const currentTabUrl = tabs[0].url.split('/')[2];
+            if(computedValue.includes(currentTabUrl))
+                chrome.storage.sync.set({ blacklist: computedValue.filter(url => url !== currentTabUrl) }, loadChanges(addBionicMarkup));
             else
-                chrome.storage.sync.set({ blacklist: [...computedValue, siteUrl] }, loadChanges(addBionicMarkup));
+                chrome.storage.sync.set({ blacklist: [...computedValue, currentTabUrl] }, loadChanges(addBionicMarkup));
         });
     });
+}
+
+
+function storeCurrentSettingsLocal()
+{
+    chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
+
+        chrome.storage.sync.get(['textColor', 'proportion'], ({ textColor, proportion }) => {
+            const newSettings = {
+                textColor,
+                proportion,
+                url: tabs[0].url.split('/')[2]
+            }
+            chrome.storage.local.get('settings', ({ settings }) => {
+                const settingsNullCheck = settings || [];
+                //if settings url exists, replace it
+                if(settingsNullCheck.find(setting => setting.url === newSettings.url))
+                    chrome.storage.local.set({ settings: settingsNullCheck.map(setting => setting.url === newSettings.url ? newSettings : setting) }, loadChanges(addBionicMarkup));
+                else
+                    chrome.storage.local.set({ settings: [...settingsNullCheck, newSettings] }, loadChanges(addBionicMarkup));
+
+
+            });
+        });
+
+    });
+}
+
+function resetAllSettings()
+{
+    chrome.storage.local.set({ settings: [] }, loadChanges(addBionicMarkup));
 }
 
 function removeAllBlacklist()
@@ -60,4 +89,8 @@ function removeAllBlacklist()
 
 blackListButton.addEventListener("click", () => {
     blacklistCurrentToggle();
+});
+
+storeSettingButton.addEventListener("click", () => {
+    storeCurrentSettingsLocal();
 });

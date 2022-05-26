@@ -23,13 +23,6 @@ function withProp(key, func) {
             });
         }
     });
-
-
-
-
-
-
-
 }
 
 const BIONIC_WORD = "bionic-word";
@@ -73,6 +66,7 @@ function addBionicMarkup() {
 
         const paragraphs = document.getElementsByTagName('p');
         [...paragraphs].forEach(addBionicMarkupTo);
+
     });
 }
 

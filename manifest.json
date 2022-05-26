@@ -15,5 +15,5 @@
     "css": [],
     "matches": ["http://*/*", "https://*/*", "file://*/*"]
   }],
-  "permissions": ["activeTab", "scripting", "storage", "tabs"]
+  "permissions": ["activeTab", "scripting", "storage", "tabs", "webRequest", "webNavigation"]
 }

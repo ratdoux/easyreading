@@ -13,7 +13,7 @@
   "content_scripts": [{
     "js": ["src/shared.js", "src/content.js"],
     "css": [],
-    "matches": ["https://*/*"]
+    "matches": ["http://*/*", "https://*/*", "file://*/*"]
   }],
-  "permissions": ["activeTab", "scripting", "storage"]
+  "permissions": ["activeTab", "scripting", "storage", "tabs"]
 }

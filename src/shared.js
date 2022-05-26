@@ -4,12 +4,10 @@ const defaultConf = {
     blacklist: []
 }
 
+
 function withProp(key, func) {
-    chrome.storage.sync.get(key, storedConf => {
+chrome.storage.sync.get(key, storedConf => {
         const computedValue = storedConf[key] || defaultConf[key];
-
-        console.log(`${key} := ${computedValue}`);
-
         func(computedValue);
     });
 }

@@ -35,7 +35,7 @@ function withProp(key, func) {
 const BIONIC_WORD = "bionic-word";
 const BIONIC = "bionic";
 
-function addBionicMarkup() {
+function addBionicMarkup(callback) {
     withProp('proportion', proportion => {
         function makeBionic(word) {
             const bionicWord = document.createElement('span');
@@ -73,15 +73,19 @@ function addBionicMarkup() {
 
         const paragraphs = document.getElementsByTagName('p');
         [...paragraphs].forEach(addBionicMarkupTo);
+
+        if (callback) callback();
     });
 }
 
-function addBionicStyles() {
+function addBionicStyles(callback) {
     withProp('textColor', textColor => {
         const bionicParts = document.getElementsByClassName(BIONIC);
 
         [...bionicParts].forEach(bionicPart => {
             bionicPart.style.color = textColor;
         });
+
+        if (callback) callback();
     });
 }

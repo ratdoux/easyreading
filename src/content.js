@@ -1,6 +1,14 @@
 const targetNode = document.body;
 const config = { attributes: true, childList: true, subtree: true };
 
+
+
+chrome.storage.local.get('settings', ({ settings }) => {
+   console.log(settings);
+});
+
+
+
 const callback = function(mutationsList, observer) {
     const hasMutated = mutationsList.some(m => {
         const classes = [
@@ -32,9 +40,10 @@ function run() {
     chrome.storage.sync.get('blacklist', blacklisted => {
         computedValue = blacklisted['blacklist'] || [];
         if(!computedValue.includes(window.location.hostname)) {
-            addBionicMarkup(addBionicStyles(observe));
+            addBionicMarkup();
+            addBionicStyles(observe);
         }
     });
 }
-
+run();
 observe();

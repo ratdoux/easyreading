@@ -23,13 +23,6 @@ function withProp(key, func) {
             });
         }
     });
-
-
-
-
-
-
-
 }
 
 const BIONIC_WORD = "bionic-word";

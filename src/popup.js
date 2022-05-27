@@ -22,12 +22,9 @@ function loadChanges(func) {
 
 
 coloriser.addEventListener("input", () => {
-
-    function syncColor() {
-        const textColor = coloriser.value;
-        chrome.storage.sync.set({ textColor }, loadChanges(addBionicStyles));
-    }
-    syncColor();
+    const textColor = coloriser.value;
+    coloriser.value = textColor;
+    chrome.storage.sync.set({ textColor }, loadChanges(addBionicStyles));
 }, false);
 
 

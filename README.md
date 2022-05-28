@@ -1,6 +1,11 @@
 # easyreading
 bada bing bada boom Chrome extension
 
+Feature list:
+1. Changing the bolded-font color to anything you wish.
+2. Changing the proportion of bolded letters in a word
+3. Saving the current settings on a particular domain (i.e blue on github, red on stack)
+4. Blacklisting domains
 
 
 How to install this :

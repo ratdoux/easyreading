@@ -4,11 +4,10 @@ const defaultConf = {
     blacklist: new Set
 }
 
-
 function withProp(key, func) {
     chrome.storage.local.get('settings', ({ settings }) => {
-        const computedSettings = settings || new Map;
-        const curDomain = new URL(window.location).hostname;
+        const computedSettings = new Map(settings || []);
+        const curDomain = window.location.hostname;
         const currentSettings = computedSettings.get(curDomain);
 
         if(currentSettings)
@@ -63,8 +62,7 @@ function addBionicMarkup(callback) {
             }
         }
 
-        const paragraphs = document.getElementsByTagName('p');
-        [...paragraphs].forEach(addBionicMarkupTo);
+        document.querySelectorAll('p').forEach(addBionicMarkupTo);
 
         if (callback) callback();
     });

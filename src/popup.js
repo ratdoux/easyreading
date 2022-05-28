@@ -25,36 +25,18 @@ function loadChanges(func) {
     };
 }
 
-chrome.storage.sync.get(['textColor', 'proportion'], ({ textColor, proportion }) => {
-    coloriser.value = textColor;
-    textValueSlider.value = proportion;
-});
-
-
-coloriser.addEventListener("input", () => {
-    const textColor = coloriser.value;
-    coloriser.value = textColor;
-    chrome.storage.sync.set({ textColor }, loadChanges(addBionicStyles));
-}, false);
-
-
-textValueSlider.addEventListener("change", () => {
-    const proportion = textValueSlider.value;
-    chrome.storage.sync.set({ proportion }, loadChanges(addBionicMarkup));
-}, false);
-
 function blacklistCurrentToggle() {
     withCurrentTab(tab => {
         withProp('blacklist', curBlacklist => {
             const newBlacklist = new Set(curBlacklist);
             const curTabDomain = new URL(tab.url).hostname;
 
-            if (curBlacklist.has(curTabDomain))
+            if (curBlacklist.includes(curTabDomain))
                 newBlacklist.delete(curTabDomain);
             else
                 newBlacklist.add(curTabDomain);
 
-            chrome.storage.sync.set({ blacklist: newBlacklist }, loadChanges(addBionicMarkup));
+            chrome.storage.sync.set({ blacklist: [...newBlacklist.values()] }, loadChanges(addBionicMarkup));
         });
     });
 }
@@ -68,11 +50,11 @@ function storeCurrentSettingsLocal() {
                 textColor,
                 proportion
             }
-            chrome.storage.local.get('settings', ({ settings: curSettingsList }) => {
-                const newSettingsList = new Map(curSettingsList);
-                newSettingsList.set(curDomain, newSettings);
+            chrome.storage.local.get('settings', ({ settings: curSettingsMap }) => {
+                const newSettingsMap = new Map(curSettingsMap);
+                newSettingsMap.set(curDomain, newSettings);
 
-                chrome.storage.local.set({ settings: newSettingsList }, loadChanges(addBionicMarkup));
+                chrome.storage.local.set({ settings: [...newSettingsMap.entries()] }, loadChanges(addBionicMarkup));
             });
         });
 
@@ -80,14 +62,28 @@ function storeCurrentSettingsLocal() {
 }
 
 function resetAllSettings() {
-    chrome.storage.local.set({ settings: new Map }, loadChanges(addBionicMarkup));
+    chrome.storage.local.set({ settings: [] }, loadChanges(addBionicMarkup));
 }
 
 function removeAllBlacklist() {
-    chrome.storage.sync.set({ blacklist: new Set }, loadChanges(addBionicMarkup));
+    chrome.storage.sync.set({ blacklist: [] }, loadChanges(addBionicMarkup));
 }
 
+// Initialise inputs
+withProp('textColor', textColor => coloriser.value = textColor);
+withProp('proportion', proportion => textValueSlider.value = proportion);
+
+coloriser.addEventListener("input", () => {
+    const textColor = coloriser.value;
+    coloriser.value = textColor;
+    chrome.storage.sync.set({ textColor }, loadChanges(addBionicStyles));
+}, false);
+
+
+textValueSlider.addEventListener("input", () => {
+    const proportion = textValueSlider.value;
+    chrome.storage.sync.set({ proportion }, loadChanges(addBionicMarkup));
+}, false);
 
 blackListButton.addEventListener("click", blacklistCurrentToggle);
-
 storeSettingButton.addEventListener("click", storeCurrentSettingsLocal);

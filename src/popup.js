@@ -19,6 +19,10 @@ function loadChanges(func) {
     };
 }
 
+chrome.storage.sync.get(['textColor', 'proportion'], ({ textColor, proportion }) => {
+    coloriser.value = textColor;
+    textValueSlider.value = proportion;
+});
 
 
 coloriser.addEventListener("input", () => {
@@ -28,7 +32,7 @@ coloriser.addEventListener("input", () => {
 }, false);
 
 
-textValueSlider.addEventListener("input", () => {
+textValueSlider.addEventListener("change", () => {
     const proportion = textValueSlider.value;
     chrome.storage.sync.set({ proportion }, loadChanges(addBionicMarkup));
 }, false);

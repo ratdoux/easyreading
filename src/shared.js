@@ -1,15 +1,16 @@
 const defaultConf = {
     textColor: 'red',
     proportion: 0.5,
-    blacklist: []
+    blacklist: new Set
 }
 
 
 function withProp(key, func) {
     chrome.storage.local.get('settings', ({ settings }) => {
-        const settingsNullCheck = settings || [];
-        const currentTabUrl = window.location.toString().split('/')[2];
-        const currentSettings = settingsNullCheck.find(setting => currentTabUrl.includes(setting.url));
+        const computedSettings = settings || new Map;
+        const curDomain = new URL(window.location).hostname;
+        const currentSettings = computedSettings.get(curDomain);
+
         if(currentSettings)
         {
             const computedValue = currentSettings[key] || defaultConf[key];
@@ -31,9 +32,6 @@ const BIONIC = "bionic";
 function addBionicMarkup(callback) {
     withProp('proportion', proportion => {
         function makeBionic(word) {
-            const bionicWord = document.createElement('span');
-            bionicWord.className = BIONIC_WORD;
-
             const bionicPart = document.createElement('b');
             bionicPart.className = BIONIC;
 
@@ -41,9 +39,10 @@ function addBionicMarkup(callback) {
             bionicPart.textContent = word.substring(0, splitIndex);
             const restOfWord = document.createTextNode(word.substring(splitIndex) + ' ');
 
+            const bionicWord = document.createElement('span');
+            bionicWord.className = BIONIC_WORD;
             bionicWord.appendChild(bionicPart);
             bionicWord.appendChild(restOfWord);
-
             return bionicWord;
         }
 
